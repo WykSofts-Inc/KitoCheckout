@@ -28,7 +28,12 @@ import KitoCart
 ///     let number = try await api.placeOrder(order)       // STK push, card charge, …
 ///     return order.confirmed(number: number)
 /// }
+/// .checkoutMap { address in MyMapView(address) }          // a real map on the delivery step
 /// ```
+///
+/// On the first step the header shows a close button: it calls `onClose` when you pass one, and
+/// otherwise dismisses the flow when it's presented (a sheet, a full-screen cover or a pushed
+/// screen). Hide it with `.checkoutDismissButton(.hidden)`.
 public struct KitoCheckoutFlow<Thumbnail: View>: View {
     @Environment(\.kitoTheme) private var theme
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
@@ -43,10 +48,16 @@ public struct KitoCheckoutFlow<Thumbnail: View>: View {
     let onPlaceOrder: (KitoCheckoutOrder) async throws -> KitoPlacedOrder
     let thumbnail: (KitoCartItem) -> Thumbnail
 
+    private var mapView: ((KitoAddress) -> AnyView)?
+    private var dismissButton: Visibility = .automatic
+
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.isPresented) private var isPresented
     @State private var showsTermsError = false
 
     /// - Parameters:
-    ///   - onClose: Shown as the back button on the first step and on the confirmation.
+    ///   - onClose: Shown as the close button on the first step and on the confirmation. Without
+    ///     it, those buttons dismiss the flow when it's presented.
     ///   - onAddCard: Adds an "Add a card" row to the payment list — present your card form
     ///     (KitoScreens' `KitoCardCheckoutScreen` works well) and add the saved card to
     ///     `model.paymentMethods`.
@@ -74,6 +85,36 @@ public struct KitoCheckoutFlow<Thumbnail: View>: View {
         self.onContinueShopping = onContinueShopping
         self.onPlaceOrder = onPlaceOrder
         self.thumbnail = thumbnail
+    }
+
+    /// Puts your own map in the delivery step's address form, in place of the placeholder
+    /// (KitoMaps, MapKit, …). The address carries `latitude` and `longitude` when it has them.
+    public func checkoutMap<Map: View>(@ViewBuilder _ map: @escaping (KitoAddress) -> Map) -> KitoCheckoutFlow {
+        var copy = self
+        copy.mapView = { AnyView(map($0)) }
+        return copy
+    }
+
+    /// Whether the first step and the confirmation show a close button. `.automatic` shows it
+    /// when there's an `onClose` or the flow is presented; `.hidden` never shows it; `.visible`
+    /// always does.
+    public func checkoutDismissButton(_ visibility: Visibility) -> KitoCheckoutFlow {
+        var copy = self
+        copy.dismissButton = visibility
+        return copy
+    }
+
+    /// What the close button does, or `nil` when there shouldn't be one.
+    private var closeAction: (() -> Void)? {
+        switch dismissButton {
+        case .hidden:
+            return nil
+        case .visible:
+            return onClose ?? { dismiss() }
+        default:
+            if let onClose { return onClose }
+            return isPresented ? { dismiss() } : nil
+        }
     }
 
     private var animation: Animation? { reduceMotion ? .easeInOut(duration: 0.2) : .spring(response: 0.48, dampingFraction: 0.86) }
@@ -147,15 +188,15 @@ public struct KitoCheckoutFlow<Thumbnail: View>: View {
     private var backButton: some View {
         if !model.isFirstStep {
             circleButton("chevron.left", label: "Back") { goBack() }
-        } else if let onClose {
-            circleButton("xmark", label: "Close", action: onClose)
+        } else if let closeAction {
+            circleButton("xmark", label: "Close", action: closeAction)
         }
     }
 
     @ViewBuilder
     private var closeButton: some View {
-        if let onClose {
-            circleButton("xmark", label: "Close", action: onClose)
+        if let closeAction {
+            circleButton("xmark", label: "Close", action: closeAction)
                 .padding(.leading, theme.spacing.lg)
                 .padding(.top, theme.spacing.sm)
         }
@@ -192,7 +233,7 @@ public struct KitoCheckoutFlow<Thumbnail: View>: View {
             KitoBagStep(model: model, tint: tint, onContinueShopping: onContinueShopping, thumbnail: thumbnail)
         case .delivery:
             KitoDeliveryStep(model: model, tint: tint) { address in
-                KitoMapPinPlaceholder(title: address.formatted(.short).isEmpty ? nil : address.formatted(.short), tint: tint)
+                deliveryMap(address)
             }
         case .payment:
             KitoPaymentStep(model: model, tint: tint, onAddCard: onAddCard)
@@ -200,6 +241,15 @@ public struct KitoCheckoutFlow<Thumbnail: View>: View {
             KitoReviewStep(model: model, tint: tint, showsTermsError: showsTermsError, onChange: { move(to: $0) }, thumbnail: thumbnail)
         case .done:
             EmptyView()
+        }
+    }
+
+    @ViewBuilder
+    private func deliveryMap(_ address: KitoAddress) -> some View {
+        if let mapView {
+            mapView(address)
+        } else {
+            KitoMapPinPlaceholder(title: address.formatted(.short).isEmpty ? nil : address.formatted(.short), tint: tint)
         }
     }
 
