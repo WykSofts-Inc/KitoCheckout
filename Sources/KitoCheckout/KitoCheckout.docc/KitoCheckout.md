@@ -107,7 +107,7 @@ own screens. Every view reads `@Environment(\.kitoTheme)`, takes an optional
 
 - ``KitoPaymentMethod``
 - ``KitoPaymentKind``
-- ``KitoCardBrand``
+- ``KitoPaymentCardBrand``
 - ``KitoPaymentMethodList``
 - ``KitoPaymentMethodIcon``
 - ``KitoApplePay``
