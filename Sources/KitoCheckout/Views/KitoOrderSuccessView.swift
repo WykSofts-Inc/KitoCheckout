@@ -219,6 +219,7 @@ struct KitoSuccessCheckmark: View {
                 .trim(from: 0, to: drawn ? 1 : 0)
                 .stroke(color, style: StrokeStyle(lineWidth: 6, lineCap: .round))
                 .rotationEffect(.degrees(-90))
+                .flipsForRightToLeftLayoutDirection(true) // Circle doesn't mirror but rotation does; keeps the start at the top in RTL
             Circle().fill(color.gradient).scaleEffect(fill ? 1 : 0.001)
             KitoTickShape()
                 .trim(from: 0, to: tick ? 1 : 0)

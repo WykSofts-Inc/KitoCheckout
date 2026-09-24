@@ -182,6 +182,7 @@ in dark by default), respects Reduce Motion, has VoiceOver labels and works in l
 - The Back button and the payment/address disclosure chevrons use `chevron.backward` / `chevron.forward`, so they point the right way in RTL.
 - The confetti and map placeholder are decorative drawings and stay as they are.
 - Money, tip and VAT strings use fixed Latin digits; localise them yourself if you need locale digits.
+- The success ring draws in from the top in RTL too (mirrored).
 
 ## Installation
 
