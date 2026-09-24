@@ -1,5 +1,7 @@
 # KitoCheckout
 
+**[Documentation](https://wyksofts-inc.github.io/KitoCheckout/documentation/kitocheckout/)**
+
 A multi-step checkout for SwiftUI: Bag → Delivery → Payment → Review → Done. It has a progress
 header in three styles, steps that slide the way you're going, and a sticky bar whose total
 updates as you change delivery, tip or promo. The parts work on their own too: a saved-address
