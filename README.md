@@ -48,6 +48,21 @@ step is complete, and a hint says what's missing: "Choose a delivery address", "
 top up KES 600", "That time is no longer available — pick another". Tap a finished step in the
 header, or "Change" on the review, to go back.
 
+Put a real map in the delivery step's address form with `.checkoutMap`, in place of the
+placeholder pin:
+
+```swift
+KitoCheckoutFlow(model: checkout, onPlaceOrder: place)
+    .checkoutMap { address in
+        MyMapView(latitude: address.latitude, longitude: address.longitude)   // KitoMaps, MapKit, …
+    }
+```
+
+The first step always has a way out. With `onClose` the header's close button calls it. Without
+it, the button dismisses the flow when it's presented, so a checkout that starts at
+`.delivery` (no bag step) in a sheet or full-screen cover can still be closed. Use
+`.checkoutDismissButton(.hidden)` when your own chrome already has one.
+
 The model holds everything, so you can also build your own screens around it:
 `checkout.advance()`, `goBack()`, `go(to:)`, `issues`, `canContinue`, `totals`, `deliveryText`,
 `placeOrder(using:)`.
@@ -164,7 +179,7 @@ in dark by default), respects Reduce Motion, has VoiceOver labels and works in l
 ## Installation
 
 ```swift
-.package(url: "https://github.com/WykSofts-Inc/KitoCheckout.git", from: "0.1.0")
+.package(url: "https://github.com/WykSofts-Inc/KitoCheckout.git", from: "0.2.0")
 ```
 
 Requires iOS 17. KitoCheckout depends on KitoCore and KitoCart.
