@@ -184,10 +184,16 @@ in dark by default), respects Reduce Motion, has VoiceOver labels and works in l
 - Money, tip and VAT strings use fixed Latin digits; localise them yourself if you need locale digits.
 - The success ring draws in from the top in RTL too (mirrored).
 
+## Migrating to 0.3
+
+0.3.0 renames `KitoCardBrand` to `KitoPaymentCardBrand`, so KitoCheckout can be imported in the
+same file as KitoFields (which has its own `KitoCardBrand`) without "ambiguous" errors. The cases
+and `detect(number:)` are unchanged; `.card(.visa, last4: "4242")` keeps compiling as it is.
+
 ## Installation
 
 ```swift
-.package(url: "https://github.com/WykSofts-Inc/KitoCheckout.git", from: "0.2.0")
+.package(url: "https://github.com/WykSofts-Inc/KitoCheckout.git", from: "0.3.0")
 ```
 
 Requires iOS 17. KitoCheckout depends on KitoCore and KitoCart.

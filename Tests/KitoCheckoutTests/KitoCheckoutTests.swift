@@ -433,11 +433,11 @@ final class KitoAddressTests: XCTestCase {
 
 final class KitoPaymentAndDeliveryTests: XCTestCase {
     func testCardBrandDetection() {
-        XCTAssertEqual(KitoCardBrand.detect(number: "4242 4242 4242 4242"), .visa)
-        XCTAssertEqual(KitoCardBrand.detect(number: "5555 5555 5555 4444"), .mastercard)
-        XCTAssertEqual(KitoCardBrand.detect(number: "2221 0000 0000 0009"), .mastercard)
-        XCTAssertEqual(KitoCardBrand.detect(number: "3782 822463 10005"), .amex)
-        XCTAssertEqual(KitoCardBrand.detect(number: "6011 0000 0000 0004"), .other)
+        XCTAssertEqual(KitoPaymentCardBrand.detect(number: "4242 4242 4242 4242"), .visa)
+        XCTAssertEqual(KitoPaymentCardBrand.detect(number: "5555 5555 5555 4444"), .mastercard)
+        XCTAssertEqual(KitoPaymentCardBrand.detect(number: "2221 0000 0000 0009"), .mastercard)
+        XCTAssertEqual(KitoPaymentCardBrand.detect(number: "3782 822463 10005"), .amex)
+        XCTAssertEqual(KitoPaymentCardBrand.detect(number: "6011 0000 0000 0004"), .other)
     }
 
     func testMethodTitlesAndSubtitles() {
