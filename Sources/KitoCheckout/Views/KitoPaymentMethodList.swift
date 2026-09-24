@@ -191,7 +191,7 @@ public struct KitoPaymentMethodIcon: View {
     }
 
     @ViewBuilder
-    private func cardMark(_ brand: KitoCardBrand) -> some View {
+    private func cardMark(_ brand: KitoPaymentCardBrand) -> some View {
         switch brand {
         case .visa:
             Text("VISA").font(.system(size: 12, weight: .black)).italic().foregroundStyle(.white)

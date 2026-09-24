@@ -176,10 +176,16 @@ KitoOrderNumber.grouped("10423381")         // "1042 3381"
 Every view reads `@Environment(\.kitoTheme)`, takes an optional `tint` (black in light mode and white
 in dark by default), respects Reduce Motion, has VoiceOver labels and works in light and dark mode.
 
+## Migrating to 0.3
+
+0.3.0 renames `KitoCardBrand` to `KitoPaymentCardBrand`, so KitoCheckout can be imported in the
+same file as KitoFields (which has its own `KitoCardBrand`) without "ambiguous" errors. The cases
+and `detect(number:)` are unchanged; `.card(.visa, last4: "4242")` keeps compiling as it is.
+
 ## Installation
 
 ```swift
-.package(url: "https://github.com/WykSofts-Inc/KitoCheckout.git", from: "0.2.0")
+.package(url: "https://github.com/WykSofts-Inc/KitoCheckout.git", from: "0.3.0")
 ```
 
 Requires iOS 17. KitoCheckout depends on KitoCore and KitoCart.

@@ -9,7 +9,7 @@
 import Foundation
 import KitoCart
 
-public enum KitoCardBrand: String, CaseIterable, Hashable, Sendable {
+public enum KitoPaymentCardBrand: String, CaseIterable, Hashable, Sendable {
     case visa, mastercard, amex, other
 
     public var title: String {
@@ -22,7 +22,7 @@ public enum KitoCardBrand: String, CaseIterable, Hashable, Sendable {
     }
 
     /// Guesses the brand from the first digits of a card number.
-    public static func detect(number: String) -> KitoCardBrand {
+    public static func detect(number: String) -> KitoPaymentCardBrand {
         let digits = number.filter(\.isNumber)
         if digits.hasPrefix("34") || digits.hasPrefix("37") { return .amex }
         if digits.hasPrefix("4") { return .visa }
@@ -38,7 +38,7 @@ public enum KitoPaymentKind: Hashable, Sendable {
     /// An M-Pesa prompt (STK push) to this phone.
     case mpesa(phone: String)
     /// A saved card. `expiry` is "MM/YY".
-    case card(brand: KitoCardBrand, last4: String, expiry: String?)
+    case card(brand: KitoPaymentCardBrand, last4: String, expiry: String?)
     case applePay
     /// Pay the rider on arrival. `limit` caps the order value accepted in cash.
     case cashOnDelivery(limit: Decimal?)
@@ -66,7 +66,7 @@ public struct KitoPaymentMethod: Identifiable, Hashable, Sendable {
         KitoPaymentMethod(id: id, kind: .mpesa(phone: phone))
     }
 
-    public static func card(_ brand: KitoCardBrand, last4: String, expiry: String? = nil, id: String? = nil) -> KitoPaymentMethod {
+    public static func card(_ brand: KitoPaymentCardBrand, last4: String, expiry: String? = nil, id: String? = nil) -> KitoPaymentMethod {
         KitoPaymentMethod(id: id ?? "card-\(last4)", kind: .card(brand: brand, last4: String(last4.suffix(4)), expiry: expiry))
     }
 
