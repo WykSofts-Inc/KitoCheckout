@@ -118,7 +118,7 @@ public struct KitoPaymentMethodList: View {
                     .font(theme.typography.bodyEmphasized.weight(.semibold))
                     .foregroundStyle(accent)
                 Spacer()
-                Image(systemName: "chevron.right").font(.caption.weight(.bold)).foregroundStyle(theme.colors.onSurface.opacity(0.3))
+                Image(systemName: "chevron.forward").font(.caption.weight(.bold)).foregroundStyle(theme.colors.onSurface.opacity(0.3))
             }
             .padding(.horizontal, theme.spacing.lg)
             .padding(.vertical, theme.spacing.md)
