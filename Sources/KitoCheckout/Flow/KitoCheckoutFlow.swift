@@ -187,7 +187,7 @@ public struct KitoCheckoutFlow<Thumbnail: View>: View {
     @ViewBuilder
     private var backButton: some View {
         if !model.isFirstStep {
-            circleButton("chevron.left", label: "Back") { goBack() }
+            circleButton("chevron.backward", label: "Back") { goBack() }
         } else if let closeAction {
             circleButton("xmark", label: "Close", action: closeAction)
         }

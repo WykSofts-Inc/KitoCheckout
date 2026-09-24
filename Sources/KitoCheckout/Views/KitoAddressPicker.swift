@@ -93,7 +93,7 @@ public struct KitoAddressPicker<Map: View>: View {
                 Text("Add new address")
                     .font(theme.typography.bodyEmphasized)
                 Spacer()
-                Image(systemName: "chevron.right").font(.caption.weight(.bold)).opacity(0.4)
+                Image(systemName: "chevron.forward").font(.caption.weight(.bold)).opacity(0.4)
             }
             .foregroundStyle(accent)
             .padding(theme.spacing.md)
